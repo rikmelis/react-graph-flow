@@ -1,0 +1,33 @@
+{
+  "name": "react-graph-flow",
+  "version": "1.0.0",
+  "description": "Component to build and visualize graphs or flow charts",
+  "author": "rikmelis",
+  "repository": {
+    "type": "git",
+    "url": "<git_repo_url>"
+  },
+  "main": "build/index.js",
+  "peerDependencies": {
+    "react": "^16.8.6"
+  },
+  "scripts": {
+    "start": "webpack --watch",
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^3.0.0",
+    "node-sass": "^4.12.0",
+    "react": "^16.8.6",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5"
+  }
+}

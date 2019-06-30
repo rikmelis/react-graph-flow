@@ -1,0 +1,49 @@
+.graph {
+  position: relative;
+}
+
+.node {
+  position: absolute;
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 15px 30px;
+  border-radius: 10px;
+  text-align: center;
+  white-space: pre;
+
+  .index {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    bottom: -12px;
+    left: -12px;
+    text-align: center;
+    color: gray;
+    border: 2px solid gray;
+    background-color: white;
+  }
+
+  .label {
+    position: absolute;
+    font-size: 16px;
+    position: absolute;
+    white-space: nowrap;
+  }
+}
+
+.edge {
+  fill: transparent;
+  stroke-width: 10px;
+}
+
+.edge-label {
+  position: absolute;
+
+  .label-box {
+    position: absolute;
+    font-size: 16px;
+    text-align: center;
+    white-space: pre;
+  }
+}
