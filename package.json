@@ -5,7 +5,7 @@
   "author": "rikmelis",
   "repository": {
     "type": "git",
-    "url": "<git_repo_url>"
+    "url": "https://github.com/rikmelis/react-graph-flow.git"
   },
   "main": "build/index.js",
   "peerDependencies": {
