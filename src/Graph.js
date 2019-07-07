@@ -1,6 +1,8 @@
 import React from 'react';
 import './Graph.scss';
 
+const isMobile = 'ontouchstart' in document.documentElement;
+
 export default class Graph extends React.Component {
   constructor(props) {
     super(props);
@@ -8,16 +10,10 @@ export default class Graph extends React.Component {
     this.nodeRefs = [];
     this.edgeLabelRefs = [];
     this.nodeLabelRefs = [];
-  }
 
-  highlightPath(node) {
-    node.highlight();
-    this.forceUpdate();
-  }
-
-  unhighlight(node) {
-    node.unhighlight();
-    this.forceUpdate();
+    this.state = {
+      prevNode: null,
+    };
   }
 
   componentDidMount() {
@@ -32,6 +28,37 @@ export default class Graph extends React.Component {
       this.props.nodes[index].labelWidth = r.getBoundingClientRect().width;
     });
     this.forceUpdate();
+  }
+
+  componentWillUnmount() {
+    if (this.state.prevNode) {
+      this.state.prevNode.unhighlight();
+    }
+  }
+
+  onActivate(node) {
+    if (isMobile) {
+      return {
+        onClick: () => {
+          if (this.state.prevNode) {
+            this.state.prevNode.unhighlight();
+          }
+          node.highlight();
+          this.setState({prevNode: node});
+        }
+      }
+    } else {
+      return {
+        onMouseEnter: () => {
+          node.highlight();
+          this.forceUpdate();
+        },
+        onMouseLeave: () => {
+          node.unhighlight();
+          this.forceUpdate();
+        },
+      }
+    }
   }
 
   render() {
@@ -52,8 +79,7 @@ export default class Graph extends React.Component {
             className={'node'}
             ref={r => this.nodeRefs[index] = r}
             style={node.getStyle()}
-            onMouseEnter={() => this.highlightPath(node)}
-            onMouseLeave={() => this.unhighlight(node)}
+            {...this.onActivate(node)}
             >
             {node.text}
             {node.id && <div className={'index'}>{node.id}</div>}
@@ -81,15 +107,13 @@ export default class Graph extends React.Component {
                 className={'edge'}
                 d={`M ${x1} ${y1} C ${x1} ${y2}, ${x1} ${y2}, ${x2} ${y2}`}
                 style={edge.getStyle()}
-                onMouseEnter={() => this.highlightPath(edge.to)}
-                onMouseLeave={() => this.unhighlight(edge.to)}
+                {...this.onActivate(edge.to)}
               />,
               <path
                 key={`arrow-${index}`}
                 d={`M ${x2 - arrowOffset} ${y2} L ${x2} ${y2 + arrowOffset} L ${x2} ${y2 - arrowOffset} Z`}
                 style={edge.getArrowStyle()}
-                onMouseEnter={() => this.highlightPath(edge.to)}
-                onMouseLeave={() => this.unhighlight(edge.to)}
+                {...this.onActivate(edge.to)}
               />
             ];
           })}
@@ -102,10 +126,9 @@ export default class Graph extends React.Component {
             >
             <div
               className={'label-box'}
-              onMouseEnter={() => this.highlightPath(edge.to)}
-              onMouseLeave={() => this.unhighlight(edge.to)}
-              style={edge.getLabelBoxStyle()}
               ref={r => this.edgeLabelRefs[index] = r}
+              style={edge.getLabelBoxStyle()}
+              {...this.onActivate(edge.to)}
               >
               {edge.label}
             </div>
