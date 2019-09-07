@@ -9,24 +9,85 @@ export default class Edge {
 		this.to.parent = this.from;
 	}
 
-  isLeftEdge() {
-    return this.from.x > this.to.x;
+  directionX() {
+    if (this.to.x - this.to.width / 2 - this.from.x > 40) {
+      return 'right';
+    } else if (this.from.x - (this.to.x + this.to.width / 2) > 40) {
+      return 'left';
+    } else {
+      return 'straight';
+    }
+  }
+
+  directionY() {
+    if (this.to.y - (this.from.y  + this.from.height / 2) > 20) {
+      return 'down';
+    } else if (this.from.y - this.from.height / 2 - this.to.y > 20) {
+      return 'up';
+    } else {
+      return 'straight';
+    }
+  }
+
+  overlapAverageX() {
+    const minX = Math.max(this.from.x - this.from.width / 2, this.to.x - this.to.width / 2);
+    const maxX = Math.min(this.from.x + this.from.width / 2, this.to.x + this.to.width / 2);
+    return (minX + maxX) / 2;
   }
 
   getX1() {
-    return this.from.x - 10 + (this.isLeftEdge() ? 0 : 20);
+    switch(this.directionX()) {
+      case 'straight':
+        return this.overlapAverageX();
+      case 'right':
+        if (this.directionY() === 'straight') {
+          return this.from.x + this.from.width / 2 + 10;
+        } else {
+          return this.from.x + 10;
+        }
+      case 'left':
+        if (this.directionY() === 'straight') {
+          return this.from.x - this.from.width / 2 - 10;
+        } else {
+          return this.from.x - 10;
+        }
+    }
   }
 
   getY1() {
-    return this.from.y + this.from.height / 2 + 5;
+    switch(this.directionY()) {
+      case 'down':
+        return this.from.y + this.from.height / 2 + 5;
+      case 'up':
+        return this.from.y - this.from.height / 2 - 5;
+      case 'straight':
+        return this.from.y;
+    }
   }
 
   getX2() {
-    return this.isLeftEdge() ? this.to.x + this.to.width / 2 + 20 : this.to.x - this.to.width / 2 - 20;
+    switch(this.directionX()) {
+      case 'straight':
+        return this.overlapAverageX();
+      case 'right':
+        return this.to.x - this.to.width / 2 - 20;
+      case 'left':
+        return this.to.x + this.to.width / 2 + 20;
+    }
   }
 
   getY2() {
-    return this.to.y;
+    if (this.directionX() === 'straight') {
+      if (this.directionY() === 'down') {
+        return this.to.y - this.to.height / 2;
+      } else {
+        return this.to.y + this.to.height / 2;
+      }
+    } else if (this.directionY() === 'straight') {
+      return this.from.y;
+    } else {
+      return this.to.y;
+    }
   }
 
   getStyle() {
@@ -49,7 +110,7 @@ export default class Edge {
     const style = {
       top: `-${this.edgeLabelHeight / 2}px`,
     };
-    if (this.isLeftEdge()) {
+    if (this.directionX() === 'left') {
       return {
         ...style,
         right: '20px',
@@ -60,5 +121,14 @@ export default class Edge {
         left: '20px',
       }
     }
+  }
+
+  serialize() {
+    return {
+      from: this.from.id,
+      to: this.to.id,
+      color: this.color,
+      label: this.label,
+    };
   }
 }

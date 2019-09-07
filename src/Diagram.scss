@@ -1,5 +1,11 @@
-.graph {
+.diagram {
   position: relative;
+
+  .download-link {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+  }
 }
 
 .node {

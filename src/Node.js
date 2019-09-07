@@ -3,12 +3,13 @@ export default class Node {
     this.text = text;
     this.x = x;
     this.y = y;
+    this.width = 0;
+    this.height = 0;
     this.color = color;
     this.label = label;
     this.style = style;
     this.id = null;
-    this.width = 0;
-    this.height = 0;
+    this.showId = false;
     this.labelWidth = 0;
     this.highlighted = false;
   }
@@ -48,5 +49,20 @@ export default class Node {
       top: `${this.height + 5}px`,
       left: `${(this.width - this.labelWidth) / 2}px`,
     }
+  }
+
+  serialize() {
+    return {
+      text: this.text,
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height,
+      color: this.color,
+      label: this.label,
+      style: this.style,
+      id: this.id,
+      showId: this.showId,
+    };
   }
 }
